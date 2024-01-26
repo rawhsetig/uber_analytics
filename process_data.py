@@ -1,5 +1,8 @@
 import pandas as pd 
 from geopy.geocoders import Nominatim
+from datetime import datetime 
+import matplotlib
+import matplotlib.pyplot as plt 
 
 data = pd.read_csv("./uber_data.csv")
 # print(data.head)
@@ -21,7 +24,7 @@ lat = 21.035400
 # print(location)
 
 #Filter non null tpep_pickup and dropoff times
-# df = data[data['tpep_pickup_datetime'] != 0]
+df = data[data['tpep_pickup_datetime'] != 0]
 
 #Filter using query function
 # df = data.query("total_amount == 12.35")
@@ -29,9 +32,25 @@ lat = 21.035400
 
 #Filter using lambda
 # print([df['VendorID'].isin([2])])
-df = data.apply(
-    lambda row: row[data['tpep_pickup_datetime'].isin([0])]
-)
-print(df)
+# df = data.apply(
+#     lambda row: row[data['tpep_pickup_datetime'].isin([0])]
+# )
+# print(df)
 
+#Calculate differece between dropoff time and pickup time
+time_df = [df['tpep_dropoff_datetime']]
+print(type(df['tpep_dropoff_datetime'][0]))
+# df['tour_time'] = df.apply( lambda row: row[
+#     datetime.strptime(df['tpep_dropoff_datetime'], '%Y-%m-%d %H:%M:%S') - datetime.strptime(df['tpep_pickup_datetime'], '%Y-%m-%d %H:%M:%S')]
+# ], axis = 0
+# )
+#---------
+# df['tour_time'] = df['tpep_dropoff_datetime'].apply(lambda row: row[datetime.strptime(str(df['tpep_dropoff_datetime']), '%Y-%m-%d %H:%M:%S')]) - \
+    # df['tpep_pickup_datetime'].apply(lambda row: row[datetime.strptime(str(df['tpep_pickup_datetime']), '%Y-%m-%d %H:%M:%S')])
+
+df['tout_time'] = df.apply(lambda row: (datetime.strptime(str(row[2]), '%Y-%m-%d %H:%M:%S') - \
+                                        datetime.strptime(str(row[1]), '%Y-%m-%d %H:%M:%S') ).total_seconds()/60, axis = 1)
+print(df['tout_time'].head)
+df['tout_time'].plot.bar()
+plt.show()
 # df = pd.DataFrame()
