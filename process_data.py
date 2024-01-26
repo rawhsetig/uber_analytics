@@ -1,7 +1,6 @@
 import pandas as pd 
 from geopy.geocoders import Nominatim
 from datetime import datetime 
-import matplotlib
 import matplotlib.pyplot as plt 
 
 data = pd.read_csv("./uber_data.csv")
@@ -48,9 +47,15 @@ print(type(df['tpep_dropoff_datetime'][0]))
 # df['tour_time'] = df['tpep_dropoff_datetime'].apply(lambda row: row[datetime.strptime(str(df['tpep_dropoff_datetime']), '%Y-%m-%d %H:%M:%S')]) - \
     # df['tpep_pickup_datetime'].apply(lambda row: row[datetime.strptime(str(df['tpep_pickup_datetime']), '%Y-%m-%d %H:%M:%S')])
 
-df['tout_time'] = df.apply(lambda row: (datetime.strptime(str(row[2]), '%Y-%m-%d %H:%M:%S') - \
-                                        datetime.strptime(str(row[1]), '%Y-%m-%d %H:%M:%S') ).total_seconds()/60, axis = 1)
+df['tout_time'] = df.apply(lambda row: (datetime.strptime(str(row.iloc[2]), '%Y-%m-%d %H:%M:%S') - \
+                                        datetime.strptime(str(row.iloc[1]), '%Y-%m-%d %H:%M:%S') ).total_seconds()/60, axis = 1)
 print(df['tout_time'].head)
-df['tout_time'].plot.bar()
+df.plot(
+    kind='scatter',
+    x= 'trip_distance',
+    y='tout_time',
+    color='red'
+)
+plt.title('tour_time')
 plt.show()
 # df = pd.DataFrame()
